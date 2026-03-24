@@ -1,4 +1,5 @@
 ---
 deployment:
   tasks:
-    - /bin/true
+    - find /home/aktivbal/public_html/wp-content/plugins/balaton-szallasok -type d -exec chmod 755 {} \;
+    - find /home/aktivbal/public_html/wp-content/plugins/balaton-szallasok -type f -exec chmod 644 {} \;
