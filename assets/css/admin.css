@@ -1,0 +1,120 @@
+/* Balaton Szállások – Admin stílusok */
+
+/* ── Meta table ─────────────────────────────────────────────────────────────── */
+.bsza-meta-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 6px;
+}
+.bsza-meta-table th {
+    width: 200px;
+    padding: 10px 14px 10px 0;
+    vertical-align: top;
+    font-weight: 600;
+    color: #1e1e1e;
+    white-space: nowrap;
+}
+.bsza-meta-table td {
+    padding: 8px 0;
+    vertical-align: top;
+}
+.bsza-meta-table input.widefat {
+    max-width: 480px;
+}
+.required { color: #d63638; }
+.bsza-gps-input { width: 200px; }
+
+/* ── Checkbox grid ──────────────────────────────────────────────────────────── */
+.bsza-checkbox-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    max-width: 600px;
+}
+.bsza-checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: #f0f6fc;
+    border: 1px solid #c5d9ed;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background 0.15s;
+}
+.bsza-checkbox-item:hover { background: #dbeafe; }
+.bsza-checkbox-item input { margin: 0; }
+
+/* ── Galéria ────────────────────────────────────────────────────────────────── */
+.bsza-gallery-preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    min-height: 70px;
+    padding: 10px;
+    background: #f8f9fa;
+    border: 2px dashed #c3c4c7;
+    border-radius: 6px;
+    margin-bottom: 12px;
+}
+.bsza-gallery-preview:empty::before {
+    content: "Még nincsenek képek. Kattints az alábbi gombra a hozzáadáshoz.";
+    color: #888;
+    font-size: 13px;
+    align-self: center;
+}
+.bsza-gallery-item {
+    position: relative;
+    width: 90px;
+    height: 90px;
+    border-radius: 5px;
+    overflow: hidden;
+    cursor: grab;
+    border: 2px solid #ddd;
+    transition: border-color 0.2s;
+}
+.bsza-gallery-item:hover { border-color: #2271b1; }
+.bsza-gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.bsza-gallery-item .bsza-remove-image {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    width: 20px;
+    height: 20px;
+    background: rgba(220,50,50,0.85);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s;
+    line-height: 1;
+    text-align: center;
+}
+.bsza-gallery-item:hover .bsza-remove-image { opacity: 1; }
+
+/* Drag placeholder */
+.bsza-gallery-placeholder {
+    width: 90px;
+    height: 90px;
+    border: 2px dashed #2271b1;
+    border-radius: 5px;
+    background: #e8f0fe;
+}
+
+/* Admin oszlop – bélyegkép */
+.column-szallas_kep img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+}
