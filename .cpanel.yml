@@ -1,8 +1,4 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/aktivbal/public_html/wp-content/plugins/balaton-szallasok/
-    - /bin/cp -R assets $DEPLOYPATH
-    - /bin/cp -R includes $DEPLOYPATH
-    - /bin/cp -R templates $DEPLOYPATH
-    - /bin/cp balaton-szallasok.php $DEPLOYPATH
+    - /bin/true
