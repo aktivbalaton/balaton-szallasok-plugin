@@ -20,6 +20,8 @@ Balatoni szállások kezelése és megjelenítése az aktivbalaton.hu WordPress 
 ```
 balaton-szallasok/
 ├── balaton-szallasok.php          ← Fő plugin fájl (konstansok, Gutenberg blokkolás, single_template filter, asset betöltés)
+├── .cpanel.yml                    ← cPanel automatikus deploy konfig (git push → szerver frissül)
+├── deploy.bat                     ← Egyszerűsített deploy script (Windows, dupla kattintás → git add+commit+push)
 ├── includes/
 │   ├── cpt.php                    ← Custom Post Type + 2 taxonómia regisztrálása
 │   ├── meta-boxes.php             ← Admin szerkesztő mezők + mentés + admin oszlopok
@@ -332,13 +334,13 @@ Ha új gombot adsz a pluginhoz, rögtön adj hozzá `!important`-ot a padding é
 
 ---
 
-## 17. Sürgős technikai fejlesztések – részletes terv
+## 17. Technikai fejlesztések
 
 Ez a szekció olyan fejlesztési feladatokat tartalmaz, amelyek egy új Claude-beszélgetésben önállóan elvégezhetők. Minden feladathoz megadjuk a pontos problémát, az okát és a javasolt megoldást.
 
 ---
 
-### 17.1 `!important` áradat eltávolítása – wrapper osztály bevezetése
+### 17.1 `!important` áradat eltávolítása – wrapper osztály bevezetése ✅ KÉSZ (v3.0.0)
 
 **Prioritás:** Magas  
 **Érintett fájlok:** `assets/css/frontend.css`, `templates/filter-template.php`, `templates/lista-template.php`, `templates/card-template.php`, `templates/single-szallasok.php`
@@ -370,17 +372,13 @@ Vezess be egy `.bsza-wrap` konténer osztályt a plugin összes frontend kimenet
    - Ezután az összes `.bsza-view-btn`, `.filter-button`, `.szallas-reszletek-btn` szabályból töröld ki az `!important` jelölőket.
    - A specificitás ellenőrzéséhez: `.bsza-wrap .bsza-view-btn` (0,2,0) > `.elementor-kit-1739 button` (0,1,1) ✓
 
-5. Tesztelés: Claude in Chrome eszközzel ellenőrizd:
-   ```javascript
-   getComputedStyle(document.querySelector('.bsza-view-btn')).padding
-   // Elvárás: '4px 12px' (nem '14px 28px')
-   ```
+**Megvalósítás:** A `.bsza-wrap` wrapper osztály bevezetése helyett a gombok `<button>` elemről `<a role="button">` elemre lettek cserélve – ez garantáltan kivédi az Elementor kit `button` selectorát, semmilyen specificitás-trükk nem szükséges.
 
-6. Verziószámot bumpolni: `balaton-szallasok.php`-ban `* Version:` ÉS `define('BSZA_VERSION', ...)` egyszerre.
+**Érintett fájlok:** `frontend.css`, `filter-template.php`, `card-template.php`
 
 ---
 
-### 17.2 Verziószám automatizálása – egyetlen forrás
+### 17.2 Verziószám automatizálása – egyetlen forrás ✅ KÉSZ (v3.0.0)
 
 **Prioritás:** Magas  
 **Érintett fájlok:** `balaton-szallasok.php`
@@ -406,8 +404,7 @@ Ezután csak a `* Version: X.X.X` fejlécsort kell módosítani, a `define()` au
 
 **Fontos:** A `get_file_data()` WordPress függvény, csak WP környezetben érhető el – de mivel a plugin csak WP-ben fut, ez nem probléma. A függvény az `ABSPATH . 'wp-includes/functions.php'`-ban van definiálva, ami betöltődik mire a plugin fut.
 
-**Tesztelés:**  
-Aktivált plugin esetén a WordPress admin → Bővítmények oldalon és a böngésző DevTools → Network fülön a `frontend.css?ver=X.X.X` URL-ben ugyanaz a verziószám szerepeljen.
+**Megvalósítás:** A `get_file_data()` alapú automatikus verzióolvasás be van vezetve. Mostantól csak a `* Version:` fejlécsort kell módosítani.
 
 ---
 
@@ -464,6 +461,14 @@ add_action( 'trash_szallasok', function() {
 
 **Opcionális további lépés – ha 200+ szállás lesz:**  
 A markerekhez küldött adatok mennyiségét csökkenteni lehet: csak `id, lat, lng, cim, telepules` mezőket küldeni, és a részletes adatokat (fotó, telefon stb.) csak InfoWindow megnyitáskor AJAX-szal lekérni. Ez viszont már egy nagyobb refaktor, most nem szükséges.
+
+---
+
+### 17.3 Térkép teljesítmény – nagy szállásszám esetén ✅ KÉSZ (v3.0.0)
+
+**Prioritás:** Közepes
+
+**Megvalósítás:** Transziens cache bevezetve (`bsza_terkep_adatok`, 6 óra). Cache törlés automatikusan történik szállás mentésekor (`save_post_szallasok`), publikálásakor (`publish_szallasok`), kukába helyezésekor (`trash_szallasok`) és törlésekor (`delete_post`).
 
 ---
 
@@ -549,35 +554,35 @@ A portál egy HTTP POST kérést küld a WordPress-nek → a plugin fogadja és 
 3. cPanel-ben felülírás
 4. Böngészőben tesztelés – Claude in Chrome eszközzel élőben ellenőrizhető a computed style
 
-### Javasolt fejlesztői munkafolyamat – GitHub + cPanel Git (tervezett)
+### Fejlesztői munkafolyamat – GitHub + cPanel Git ✅ KÉSZ
 
-Ez a jelenlegi cPanel-es kézi feltöltést váltja ki. Beállítás után minden mentés automatikusan felkerül a szerverre.
+**GitHub repó:** https://github.com/aktivbalaton/balaton-szallasok-plugin (privát)  
+**Lokális mappa:** `E:\aktivbalaton.hu\Saját pluginok\balaton-szallasok`  
+**Szerver mappa:** `/home/aktivbal/public_html/wp-content/plugins/balaton-szallasok`
 
-**Egyszeri beállítás lépései:**
+**Beállítás összefoglalója:**
+1. GitHub privát repó létrehozva (`aktivbalaton` fiók)
+2. Lokális Git inicializálva, GitHub-hoz kapcsolva
+3. cPanel → Git™ Version Control → repó összekapcsolva a szerver plugin mappájával
+4. GitHub webhook beállítva → minden `git push` után a cPanel automatikusan frissíti a szervert
+5. `.cpanel.yml` deploy konfig hozzáadva
+6. `deploy.bat` script hozzáadva az egyszerűsített deployhoz
 
-1. GitHub-on létrehozni egy privát repót: `balaton-szallasok-plugin`
-2. A lokális plugin mappában Git repót inicializálni:
-   ```bash
-   cd "E:\aktivbalaton.hu\Saját pluginok\balaton-szallasok"
-   git init
-   git remote add origin https://github.com/aktivbalaton/balaton-szallasok-plugin.git
-   git add .
-   git commit -m "Initial commit"
-   git push -u origin main
-   ```
-3. cPanel-ben: **Git Version Control** → **Create** → a szerver plugin mappájára (`/wp-content/plugins/balaton-szallasok`) irányítva, a GitHub repó URL-jével összekapcsolva
-4. cPanel-ben **Webhooks** beállítása: minden `git push` után a szerver automatikusan lehúzza a változásokat (`git pull`)
-
-**Munkafolyamat beállítás után:**
+**Munkafolyamat:**
 1. Claude módosítja a fájlokat a Filesystem tool-lal
-2. `git add . && git commit -m "leírás" && git push` – ez az egyetlen manuális lépés
-3. A szerver automatikusan frissül, böngészőben tesztelés
+2. Dupla kattintás a `deploy.bat`-ra → commit üzenet megadása → automatikus push → szerver frissül
+3. Böngészőben tesztelés
 
-**Előnyök a jelenlegi megoldással szemben:**
+**Fontos technikai adatok:**
+- cPanel API token neve: `github-webhook` (Manage API Tokens-ban)
+- GitHub Personal Access Token neve: `cpanel-deploy` (no expiration, repo scope)
+- Jailed SSH: bekapcsolva
+- `.cpanel.yml` tartalma: `/bin/true` (a fájlok már a helyükön vannak, nincs másolás)
+
+**Előnyök:**
 - Nincs kézi cPanel feltöltés
 - Teljes verziókövetés – bármikor visszaállítható egy korábbi állapot
-- Több gépen is fejleszthető
-- Claude in Chrome-mal akár a `git push` is automatizálható
+- Gyors deploy: `deploy.bat` dupla kattintás → kész
 
 ---
 
