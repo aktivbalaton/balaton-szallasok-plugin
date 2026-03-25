@@ -577,7 +577,10 @@ A portál egy HTTP POST kérést küld a WordPress-nek → a plugin fogadja és 
 - cPanel API token neve: `github-webhook` (Manage API Tokens-ban)
 - GitHub Personal Access Token neve: `cpanel-deploy` (no expiration, repo scope)
 - Jailed SSH: bekapcsolva
-- `.cpanel.yml` tartalma: `/bin/true` (a fájlok már a helyükön vannak, nincs másolás)
+- Git repó helye a szerveren: `/home/aktivbal/balaton-szallasok-git/` (KÍVÜL a public_html-en!)
+- Plugin mappa: `/home/aktivbal/public_html/wp-content/plugins/balaton-szallasok/`
+- `.cpanel.yml` a fájlokat a git repóból a plugin mappába másolja + chmod 755/644 jogosultságot állít be
+- **Fontos:** A git repót NEM szabad a `public_html`-en belülre rakni – az Imunify360 biztonsági szoftver blokkolja a `.git` mappát tartalmazó könyvtárakat web-elérhető helyen!
 
 **Előnyök:**
 - Nincs kézi cPanel feltöltés
@@ -613,3 +616,5 @@ A portál egy HTTP POST kérést küld a WordPress-nek → a plugin fogadja és 
 - **CSS változtatás nem látszik:** Verziószám nem lett bumpolva, vagy a LiteSpeed cache nem lett törölve. Bumpolj verziót, töröld a cache-t.
 - **Egyedi szállás oldal 404-et ad:** Permalinkek nem lettek frissítve. Beállítások → Permalinkek → Mentés.
 - **`* Version:` és `define('BSZA_VERSION')` eltér:** A WP a fejlécet olvassa (Bővítmények oldal), a konstans a cache-törésre kell. Mindig tartsd szinkronban.
+
+teszt
