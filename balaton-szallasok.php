@@ -31,6 +31,7 @@ require_once BSZA_PATH . 'includes/cpt.php';
 require_once BSZA_PATH . 'includes/meta-boxes.php';
 require_once BSZA_PATH . 'includes/shortcodes.php';
 require_once BSZA_PATH . 'includes/ajax-handlers.php';
+require_once BSZA_PATH . 'includes/rest-api.php';
 
 if ( file_exists( BSZA_PATH . 'includes/settings.php' ) ) {
     require_once BSZA_PATH . 'includes/settings.php';
