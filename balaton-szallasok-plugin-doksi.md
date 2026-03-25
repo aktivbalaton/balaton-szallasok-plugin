@@ -616,5 +616,4 @@ A portál egy HTTP POST kérést küld a WordPress-nek → a plugin fogadja és 
 - **CSS változtatás nem látszik:** Verziószám nem lett bumpolva, vagy a LiteSpeed cache nem lett törölve. Bumpolj verziót, töröld a cache-t.
 - **Egyedi szállás oldal 404-et ad:** Permalinkek nem lettek frissítve. Beállítások → Permalinkek → Mentés.
 - **`* Version:` és `define('BSZA_VERSION')` eltér:** A WP a fejlécet olvassa (Bővítmények oldal), a konstans a cache-törésre kell. Mindig tartsd szinkronban.
-
-teszt
+- **Deploy után a szerver nem frissül:** Ellenőrizd a GitHub webhook `repository_root` paraméterét – a helyes érték: `/home/aktivbal/balaton-szallasok-git/`. GitHub → Settings → Webhooks → Edit. A Recent Deliveries fülön a zöld pipa jelzi a sikeres kézbesítést.
