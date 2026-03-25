@@ -446,7 +446,9 @@ function bsza_api_meta() {
 
     $fmt = function( $terms ) {
         if ( is_wp_error( $terms ) ) return [];
-        return array_map( fn($t) => [ 'id' => $t->term_id, 'name' => $t->name, 'count' => $t->count ], $terms );
+        return array_map( function( $t ) {
+            return [ 'id' => $t->term_id, 'name' => $t->name, 'count' => $t->count ];
+        }, $terms );
     };
 
     // Egyedi települések a szállásokból
