@@ -1,6 +1,6 @@
 # Balaton Szállások WordPress Plugin – Fejlesztési dokumentáció
 
-**Verzió:** 2.9.6  
+**Verzió:** 3.1.1  
 **Webhely:** aktivbalaton.hu  
 **Plugin mappa a szerveren:** `/wp-content/plugins/balaton-szallasok/`  
 **Plugin mappa a fejlesztői gépen:** `E:\aktivbalaton.hu\Saját pluginok\balaton-szallasok\`
@@ -27,7 +27,8 @@ balaton-szallasok/
 │   ├── meta-boxes.php             ← Admin szerkesztő mezők + mentés + admin oszlopok
 │   ├── shortcodes.php             ← 2 shortcode regisztrálása
 │   ├── ajax-handlers.php          ← AJAX szűrő + modal adat endpoint
-│   └── settings.php               ← Plugin beállítások oldal (Google Maps API kulcs + lista oldal URL)
+│   ├── settings.php               ← Plugin beállítások oldal (Google Maps API kulcs + lista oldal URL)
+│   └── rest-api.php               ← REST API endpontok (AktivBalaton Portal integráció)
 ├── templates/
 │   ├── card-template.php          ← Egy szállás kártyája (Schema.org + modal adat + saját oldal link)
 │   ├── filter-template.php        ← Szűrő panel + Lista/Térkép váltó gombok
@@ -617,3 +618,77 @@ A portál egy HTTP POST kérést küld a WordPress-nek → a plugin fogadja és 
 - **Egyedi szállás oldal 404-et ad:** Permalinkek nem lettek frissítve. Beállítások → Permalinkek → Mentés.
 - **`* Version:` és `define('BSZA_VERSION')` eltér:** A WP a fejlécet olvassa (Bővítmények oldal), a konstans a cache-törésre kell. Mindig tartsd szinkronban.
 - **Deploy után a szerver nem frissül:** Ellenőrizd a GitHub webhook `repository_root` paraméterét – a helyes érték: `/home/aktivbal/balaton-szallasok-git/`. GitHub → Settings → Webhooks → Edit. A Recent Deliveries fülön a zöld pipa jelzi a sikeres kézbesítést.
+- **REST API 404 (rest_no_route):** Az új `rest-api.php` deploy után frissíteni kell a permalink szabályokat: WP Admin → Beállítások → Permalinkek → Mentés. Ha ez sem segít, ellenőrizd hogy a `rest-api.php` valóban felkerült-e a szerverre (cPanel Git → Pull or Deploy → manuális Deploy HEAD Commit).
+- **REST API PHP szintax hiba:** A `rest-api.php` PHP 7.4+ kompatibilis, de `fn()` arrow function szintaxis PHP 7.3-on hibát okoz. Mindig `function($x) { return ...; }` alakot használj.
+- **WP admin lassú:** Ha a Query Monitor HTTP API Calls fülén timeout-os külső hívások látszanak, azonosítsd a plugint és kapcsold ki. Ismert problémás pluginok: ElementsKit Lite, MetForm (mindkettő Wpmet fejlesztőtől – minden admin oldalon `api.wpmet.com`-ra hívnak ~10mp timeout-tal).
+
+---
+
+## 21. Portal REST API integráció (v3.0.0+)
+
+A plugin REST API-n keresztül kapcsolódik az AktivBalaton Portálhoz. A portálból közvetlenül lehet szállásokat létrehozni, szerkeszteni, listázni és képeket feltölteni.
+
+### Endpontok (`/wp-json/bsza/v1/`)
+
+| Módszer | URL | Leírás |
+|---------|-----|---------|
+| GET | `/bsza/v1/status` | Publikus státusz / ping (auth nélkül) |
+| GET | `/bsza/v1/szallasok` | Szálláslista (szűrés, lapozás) |
+| GET | `/bsza/v1/szallas/{id}` | Egy szállás részletei |
+| POST | `/bsza/v1/szallas` | Új szállás létrehozása |
+| PUT | `/bsza/v1/szallas/{id}` | Meglévő szállás frissítése |
+| POST | `/bsza/v1/szallas/{id}/kep` | Kép sideload URL-ből (WP Media Library-ba importál) |
+| GET | `/bsza/v1/meta` | Típusok, felszereltségek, települések listája |
+
+**Auth:** WordPress Application Password (Basic Auth), `publish_posts` capability szükséges.
+
+### Lista szűrési paraméterek (GET /szallasok)
+
+| Paraméter | Típus | Alap | Leírás |
+|-----------|-------|------|--------|
+| `per_page` | int | 20 | Oldalankénti elemek (max 100) |
+| `page` | int | 1 | Oldalaszám |
+| `search` | string | – | Szöveges keresés |
+| `status` | string | publish | `publish` / `draft` / `any` |
+| `telepules` | string | – | Település szűrő |
+| `tipus` | string | – | Típus szűrő (taxonómia név) |
+
+### Kép sideload folyamat
+
+1. Portal → Firebase Storage feltöltés (`szallasok/{uid}/{filename}`)
+2. Firebase Storage URL → `szallasProxy` Cloud Function → `/bsza/v1/szallas/{id}/kep`
+3. WP: `download_url()` + `media_handle_sideload()` → WP Media Library attachment
+4. Első kép automatikusan kiemeltkep lesz (`set_post_thumbnail`)
+5. Többi kép: `szallas_galeria_ids` meta tömbhöz hozzáadva
+
+### Portál integráció architektúrája
+
+```
+Portal (szallasok.html) → Firebase Auth token
+    ↓
+szallasProxy Cloud Function (europe-west1)
+    URL: https://szallasproxy-duxzytyf7a-ew.a.run.app
+    ↓ WP Application Password (Secret Manager: WP_USERNAME, WP_APP_PASSWORD)
+WordPress REST API /wp-json/bsza/v1/
+    ↓
+balaton-szallasok plugin (includes/rest-api.php)
+    ↓
+szallasok CPT + post meta + taxonómiák
+```
+
+### Mentés logika a portálon
+
+- **Mentés gomb:** Mindig `draft` (piszkozat) státuszba ment – nem kerül azonnal élesre
+- **Közzétesz gomb:** Csak piszkozatnál jelenik meg, `publish` státuszra állítés
+- **Élő szállás szerkesztésekor:** A mentés piszkozatra változtatja, külön Közzétesz kell
+
+---
+
+## 22. Changelog (plugin)
+
+| Verzió | Dátum | Változás |
+|--------|-------|----------|
+| 3.1.1 | 2026-03-25 | REST API PHP kompatibilitás fix (`fn()` → `function()`); cPanel manuális Pull+Deploy; WP_MEMORY_LIMIT 40M→256M (wp-config.php); ElementsKit Lite + MetForm eltávolítva (WP admin lassulás) |
+| 3.1.0 | 2026-03-25 | Verzióbump deploy teszt |
+| 3.0.0 | 2026-03-25 | Portal REST API integráció: `includes/rest-api.php` (7 endpoint: list/get/create/update/sideload/meta/status); `balaton-szallasok.php`: rest-api.php require hozzáadva |
+| 2.9.6– | 2026-03-24 | GitHub webhook `repository_root` javítás; korai verziók: lásd a 17. szekciót |

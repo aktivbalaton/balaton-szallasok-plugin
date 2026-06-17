@@ -475,7 +475,6 @@ function bsza_api_status() {
         'plugin'     => 'Balaton Szállások REST API',
         'version'    => BSZA_VERSION,
         'endpoint'   => rest_url( 'bsza/v1/szallasok' ),
-        'wp_version' => get_bloginfo( 'version' ),
         'cpt_exists' => post_type_exists( 'szallasok' ),
     ] );
 }
