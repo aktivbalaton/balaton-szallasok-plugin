@@ -16,8 +16,8 @@ $felszereltsegek = get_terms( array( 'taxonomy' => 'szallas_felszereltseg_tax', 
 <div class="szallasok-filters">
     <form id="szallas-filter">
 
-        <!-- Lista / Térkép váltó -->
-        <div class="bsza-view-toggle">
+        <!-- Lista / Térkép váltó – segmented control -->
+        <div class="bsza-view-toggle" role="group" aria-label="Nézet váltás">
             <a href="#" role="button" id="bsza-view-lista" class="bsza-view-btn active">
                 <i class="fas fa-th-large"></i> Lista
             </a>
@@ -26,9 +26,18 @@ $felszereltsegek = get_terms( array( 'taxonomy' => 'szallas_felszereltseg_tax', 
             </a>
         </div>
 
-        <div class="bsza-filter-title">Szállások szűrése</div>
+        <div class="bsza-filter-title"><i class="fas fa-sliders-h"></i> Szállások szűrése</div>
 
-        <div class="filter-header">
+        <!-- Szöveges kereső -->
+        <div class="filter-group bsza-search-group">
+            <label for="bsza-kereses"><i class="fas fa-search"></i> Keresés</label>
+            <input type="search" id="bsza-kereses" name="kereses" class="bsza-input"
+                   placeholder="Szállás neve, kulcsszó…" />
+        </div>
+
+        <!-- Rendezés -->
+        <div class="filter-group">
+            <label for="sort"><i class="fas fa-sort"></i> Rendezés</label>
             <select id="sort" name="sort" class="sort-select">
                 <option value="date_desc">Legújabb elöl</option>
                 <option value="date_asc">Legrégebbi elöl</option>
@@ -41,7 +50,7 @@ $felszereltsegek = get_terms( array( 'taxonomy' => 'szallas_felszereltseg_tax', 
 
         <?php if ( ! empty( $telepulesek ) ) : ?>
         <div class="filter-group">
-            <label for="telepules">Település:</label>
+            <label for="telepules"><i class="fas fa-map-marker-alt"></i> Település</label>
             <select id="telepules" name="telepules">
                 <option value="">Összes település</option>
                 <?php foreach ( $telepulesek as $t ) : ?>
@@ -53,7 +62,7 @@ $felszereltsegek = get_terms( array( 'taxonomy' => 'szallas_felszereltseg_tax', 
 
         <?php if ( ! empty( $tipusok ) && ! is_wp_error( $tipusok ) ) : ?>
         <div class="filter-group">
-            <label for="tipus">Típus:</label>
+            <label for="tipus"><i class="fas fa-home"></i> Típus</label>
             <select id="tipus" name="tipus">
                 <option value="">Összes típus</option>
                 <?php foreach ( $tipusok as $tipus ) : ?>
@@ -64,7 +73,7 @@ $felszereltsegek = get_terms( array( 'taxonomy' => 'szallas_felszereltseg_tax', 
         <?php endif; ?>
 
         <div class="filter-group">
-            <label for="min_ferohely">Min. férőhelyek:</label>
+            <label for="min_ferohely"><i class="fas fa-users"></i> Min. férőhely</label>
             <select id="min_ferohely" name="min_ferohely">
                 <option value="">Bármennyi</option>
                 <option value="2">2+ fő</option>
@@ -76,7 +85,7 @@ $felszereltsegek = get_terms( array( 'taxonomy' => 'szallas_felszereltseg_tax', 
 
         <?php if ( ! empty( $felszereltsegek ) && ! is_wp_error( $felszereltsegek ) ) : ?>
         <div class="filter-felszereltseg">
-            <label class="felszereltseg-label">Felszereltség:</label>
+            <label class="felszereltseg-label"><i class="fas fa-couch"></i> Felszereltség</label>
             <div class="felszereltseg-options">
                 <?php foreach ( $felszereltsegek as $f ) : ?>
                     <label class="checkbox-label">
@@ -88,7 +97,15 @@ $felszereltsegek = get_terms( array( 'taxonomy' => 'szallas_felszereltseg_tax', 
         </div>
         <?php endif; ?>
 
-        <a href="#" role="button" class="filter-button" onclick="document.getElementById('szallas-filter').dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}));return false;">Szűrés</a>
+        <div class="bsza-filter-actions">
+            <a href="#" role="button" class="filter-button"
+               onclick="document.getElementById('szallas-filter').dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}));return false;">
+                <i class="fas fa-search"></i> Szűrés
+            </a>
+            <a href="#" role="button" class="bsza-reset-btn reset-filters">
+                <i class="fas fa-rotate-left"></i> Visszaállítás
+            </a>
+        </div>
     </form>
 </div>
 </div><!-- /.bsza-wrap -->

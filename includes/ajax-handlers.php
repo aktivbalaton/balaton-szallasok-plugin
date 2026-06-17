@@ -15,6 +15,11 @@ function bsza_filter_szallasok() {
         'post_status'    => 'publish',
     );
 
+    // Szöveges keresés (szállás neve + leírás)
+    if ( ! empty( $_POST['kereses'] ) ) {
+        $args['s'] = sanitize_text_field( wp_unslash( $_POST['kereses'] ) );
+    }
+
     // Rendezés
     $sort = isset( $_POST['sort'] ) ? sanitize_key( $_POST['sort'] ) : 'date_desc';
     switch ( $sort ) {

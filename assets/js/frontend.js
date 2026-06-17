@@ -183,6 +183,7 @@ jQuery(document).ready(function ($) {
             felszereltseg.push($(this).val());
         });
         return {
+            kereses:       $('#bsza-kereses').val() || '',
             telepules:     $('#telepules').val()    || '',
             tipus:         $('#tipus').val()        || '',
             min_ferohely:  $('#min_ferohely').val() || '',
