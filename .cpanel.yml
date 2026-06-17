@@ -1,9 +1,9 @@
 ---
 deployment:
   tasks:
-    - /bin/cp -R /home/aktivbal/balaton-szallasok-git/assets /home/aktivbal/public_html/wp-content/plugins/balaton-szallasok/
-    - /bin/cp -R /home/aktivbal/balaton-szallasok-git/includes /home/aktivbal/public_html/wp-content/plugins/balaton-szallasok/
-    - /bin/cp -R /home/aktivbal/balaton-szallasok-git/templates /home/aktivbal/public_html/wp-content/plugins/balaton-szallasok/
-    - /bin/cp /home/aktivbal/balaton-szallasok-git/balaton-szallasok.php /home/aktivbal/public_html/wp-content/plugins/balaton-szallasok/
+    - /bin/cp -R /home/aktivbal/balaton-szallasok-deploy/assets /home/aktivbal/public_html/wp-content/plugins/balaton-szallasok/
+    - /bin/cp -R /home/aktivbal/balaton-szallasok-deploy/includes /home/aktivbal/public_html/wp-content/plugins/balaton-szallasok/
+    - /bin/cp -R /home/aktivbal/balaton-szallasok-deploy/templates /home/aktivbal/public_html/wp-content/plugins/balaton-szallasok/
+    - /bin/cp /home/aktivbal/balaton-szallasok-deploy/balaton-szallasok.php /home/aktivbal/public_html/wp-content/plugins/balaton-szallasok/
     - find /home/aktivbal/public_html/wp-content/plugins/balaton-szallasok -type d -exec chmod 755 {} \;
     - find /home/aktivbal/public_html/wp-content/plugins/balaton-szallasok -type f -exec chmod 644 {} \;
