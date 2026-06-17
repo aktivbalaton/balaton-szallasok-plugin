@@ -276,8 +276,9 @@ body.bsza-modal-open { overflow: hidden; }
 #bsza-modal-overlay.active #bsza-modal { transform: translateY(0); }
 .bsza-modal-header { display: flex; align-items: center; justify-content: space-between; padding: 18px 24px; border-bottom: 1px solid #e2e8f0; flex-shrink: 0; }
 .bsza-modal-title { font-size: 1.4em; color: #1a202c; margin: 0; font-weight: 700; }
-#bsza-modal-close { width: 36px; height: 36px; border-radius: 50%; border: none; background: #f1f5f9; color: #4a5568; font-size: 1.1em; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; flex-shrink: 0; }
-#bsza-modal-close:hover { background: #e2e8f0; }
+#bsza-modal-close { width: 38px; height: 38px; border: none; background: transparent; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.18s ease; flex-shrink: 0; }
+#bsza-modal-close:hover { transform: scale(1.12); }
+.bsza-close-ikon { width: 30px; height: 30px; display: block; }
 .bsza-modal-body { overflow-y: auto; flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
 .bsza-modal-gallery { background: #1a202c; position: relative; display: flex; flex-direction: column; }
 .bsza-modal-main-img-wrap { position: relative; flex: 1; min-height: 280px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
@@ -316,8 +317,9 @@ body.bsza-modal-open { overflow: hidden; }
 #bsza-lightbox-fs { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 999999; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.25s; }
 #bsza-lightbox-fs.active { opacity: 1; }
 #bsza-fs-img { max-width: 90vw; max-height: 85vh; object-fit: contain; display: block; border-radius: 4px; }
-#bsza-fs-close { position: absolute; top: 16px; right: 20px; background: rgba(255,255,255,0.15); border: none; color: white; width: 40px; height: 40px; border-radius: 50%; font-size: 1.1em; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; justify-content: center; }
-#bsza-fs-close:hover { background: rgba(255,255,255,0.3); }
+#bsza-fs-close { position: absolute; top: 16px; right: 20px; background: transparent; border: none; width: 44px; height: 44px; padding: 0; cursor: pointer; transition: transform 0.18s ease, filter 0.15s; display: flex; align-items: center; justify-content: center; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6)); z-index: 3; }
+#bsza-fs-close:hover { transform: scale(1.12); filter: drop-shadow(0 3px 8px rgba(0,0,0,0.7)); }
+#bsza-fs-close .bsza-close-ikon { width: 36px; height: 36px; }
 .bsza-fs-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: #E8943A; width: 56px; height: 56px; cursor: pointer; transition: transform 0.18s ease, color 0.15s, filter 0.15s; display: flex; align-items: center; justify-content: center; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6)); }
 .bsza-fs-arrow:hover { color: #d67f24; transform: translateY(-50%) scale(1.12); }
 .bsza-fs-arrow .bsza-arrow-ikon { width: 42px; height: 42px; }
