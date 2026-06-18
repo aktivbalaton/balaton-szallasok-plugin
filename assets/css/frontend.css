@@ -288,8 +288,8 @@ body.bsza-modal-open { overflow: hidden; }
 .bsza-lb-arrow:hover { color: #d67f24; transform: translateY(-50%) scale(1.12); filter: drop-shadow(0 3px 7px rgba(0,0,0,0.6)); }
 .bsza-lb-prev { left: 8px; }
 .bsza-lb-next { right: 8px; }
-.bsza-arrow-ikon { font-size: 30px; line-height: 1; pointer-events: none; }
-.bsza-fs-arrow .bsza-arrow-ikon { font-size: 38px; }
+.bsza-arrow-ikon { width: 34px !important; height: 34px !important; max-width: none !important; display: block; pointer-events: none; }
+.bsza-fs-arrow .bsza-arrow-ikon { width: 42px !important; height: 42px !important; }
 .bsza-lb-fullscreen { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.45); border: none; color: #E8943A; width: 36px; height: 36px; border-radius: 8px; cursor: pointer; font-size: 0.95em; transition: background 0.2s, color 0.15s; display: flex; align-items: center; justify-content: center; z-index: 2; backdrop-filter: blur(2px); }
 .bsza-lb-fullscreen:hover { background: rgba(0,0,0,0.7); color: #d67f24; }
 .bsza-modal-thumbs { display: flex; gap: 6px; padding: 8px; overflow-x: auto; background: #0d1117; flex-shrink: 0; }

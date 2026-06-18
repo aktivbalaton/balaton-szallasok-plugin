@@ -94,10 +94,10 @@ $lista_url = get_option( 'bsza_lista_oldal_url', '' );
                          class="bsza-single-main-img" />
                     <?php if ( count( $images ) > 1 ) : ?>
                         <button class="bsza-lb-arrow bsza-lb-prev" id="bsza-single-prev" aria-label="Előző kép">
-                            <i class="fas fa-chevron-left bsza-arrow-ikon" style="color:#E8943A !important"></i>
+                            <img class="bsza-arrow-ikon" src="<?php echo esc_url( BSZA_URL . 'assets/img/arrow-left.svg' ); ?>" alt="" />
                         </button>
                         <button class="bsza-lb-arrow bsza-lb-next" id="bsza-single-next" aria-label="Következő kép">
-                            <i class="fas fa-chevron-right bsza-arrow-ikon" style="color:#E8943A !important"></i>
+                            <img class="bsza-arrow-ikon" src="<?php echo esc_url( BSZA_URL . 'assets/img/arrow-right.svg' ); ?>" alt="" />
                         </button>
                     <?php endif; ?>
                     <button class="bsza-lb-fullscreen" id="bsza-single-fullscreen" aria-label="Teljes képernyő">
