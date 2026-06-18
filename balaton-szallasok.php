@@ -3,7 +3,7 @@
  * Plugin Name: Balaton Szállások
  * Plugin URI:
  * Description: Balatoni szállások kezelése és megjelenítése – ACF-mentes, önálló plugin.
- * Version: 3.2.7
+ * Version: 3.2.8
  * Author: aktivbalaton.hu
  * Text Domain: balaton-szallasok
  */
@@ -97,6 +97,7 @@ function bsza_enqueue_frontend_assets() {
         'ajaxurl'   => admin_url( 'admin-ajax.php' ),
         'nonce'     => wp_create_nonce( 'szallasok_nonce' ),
         'pluginUrl' => BSZA_URL,
+        'ver'       => BSZA_VERSION,
         'hasMapKey' => ! empty( $api_key ) ? '1' : '0',
         'mapCenter' => array( 'lat' => 46.8389, 'lng' => 17.8868 ),
         'mapZoom'   => 10,
